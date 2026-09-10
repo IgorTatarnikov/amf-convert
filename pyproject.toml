@@ -1,7 +1,7 @@
 [project]
 name = "amf-convert"
 authors = [{name = "Advanced Microscopy Facility", email= "i.tatarnikov@ucl.ac.uk"}]
-description = "A tool for converh5 or ome zarr"
+description = "A tool for converting various microscopy file formats to h5 or ome zarr"
 readme = "README.md"
 requires-python = ">=3.11.0"
 dynamic = ["version"]
