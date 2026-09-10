@@ -6,7 +6,11 @@ readme = "README.md"
 requires-python = ">=3.11.0"
 dynamic = ["version"]
 
-dependencies = []
+dependencies = [
+    "nd2",
+    "h5py",
+    "numpy",
+]
 
 license = "BSD-3-Clause"
 
@@ -28,6 +32,9 @@ classifiers = [
 "Documentation" = "https://github.com/IgorTatarnikov/amf-convert"
 "Source Code" = "https://github.com/IgorTatarnikov/amf-convert"
 "User Support" = "https://github.com/IgorTatarnikov/amf-convert/issues"
+
+[project.scripts]
+amf-convert = "amf_convert.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -60,6 +67,10 @@ exclude = ["tests*"]
 addopts = "--cov=amf_convert"
 filterwarnings = [
     "error",
+    # ponytail: nd2/dask/h5py emit DeprecationWarnings we don't control.
+    # Broad ignore; narrow to specific modules if a real regression hides here.
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
 ]
 
 [tool.setuptools_scm]

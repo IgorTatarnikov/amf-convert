@@ -85,3 +85,8 @@ venv/
 # SDD controller artifacts — not part of the deliverable
 docs/superpowers/
 .superpowers/
+
+# Microscopy sample / output data — never packaged or tracked
+*.nd2
+*.h5
+*.hdf5
