@@ -81,3 +81,7 @@ venv/
 
 # written by setuptools-scm
 **/_version.py
+
+# SDD controller artifacts — not part of the deliverable
+docs/superpowers/
+.superpowers/
