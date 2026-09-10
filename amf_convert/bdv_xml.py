@@ -104,14 +104,14 @@ def write_bdv_xml(
             )
             t = ET.SubElement(reg, "ViewTransform", type="affine")
             ET.SubElement(t, "Name").text = "Translation from Stage Position"
-            ET.SubElement(t, "affine").text = (
-                f"1.0 0.0 0.0 {tx} 0.0 1.0 0.0 {ty} 0.0 0.0 1.0 {tz}"
-            )
+            ET.SubElement(
+                t, "affine"
+            ).text = f"1.0 0.0 0.0 {tx} 0.0 1.0 0.0 {ty} 0.0 0.0 1.0 {tz}"
             c = ET.SubElement(reg, "ViewTransform", type="affine")
             ET.SubElement(c, "Name").text = "calibration"
-            ET.SubElement(c, "affine").text = (
-                f"1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 {z_stretch} 0.0"
-            )
+            ET.SubElement(
+                c, "affine"
+            ).text = f"1.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 {z_stretch} 0.0"
 
     tree = ET.ElementTree(spim)
     ET.indent(tree, space="  ")

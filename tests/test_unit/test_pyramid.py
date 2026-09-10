@@ -50,3 +50,8 @@ def test_downsample_mean_trims_odd():
     arr = np.ones((5, 5, 5), dtype=np.uint16)
     out = downsample(arr, (2, 2, 2), "mean")
     assert out.shape == (2, 2, 2)
+
+
+def test_downsample_rejects_unknown_method():
+    with pytest.raises(ValueError):
+        downsample(np.zeros((2, 2, 2), dtype=np.uint16), (1, 1, 1), "bogus")

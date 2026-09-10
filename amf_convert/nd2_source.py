@@ -36,8 +36,11 @@ def open_nd2(path):
     f = nd2.ND2File(str(path))
     d = f.to_dask()
     assert d.dtype == np.uint16, f"expected uint16, got {d.dtype}"
-    assert d.ndim in (4, 5), f"expected (P,)Z,C,Y,X, got {d.shape}"
-    has_p = d.ndim == 5
+    axes = tuple(f.sizes)
+    assert axes in (("P", "Z", "C", "Y", "X"), ("Z", "C", "Y", "X")), (
+        f"unsupported ND2 axis layout {dict(f.sizes)}; expected (P,)Z,C,Y,X"
+    )
+    has_p = axes[0] == "P"
     num_tiles = d.shape[0] if has_p else 1
     z, c, y, x = d.shape[-4:]
     return Nd2Source(

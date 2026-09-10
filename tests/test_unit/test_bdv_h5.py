@@ -8,7 +8,7 @@ from amf_convert.pyramid import downsample, level_factors, step_factors
 def _slabs(vol, chunk_z):
     # vol: (Z, C, Y, X)
     for z0 in range(0, vol.shape[0], chunk_z):
-        yield z0, vol[z0:z0 + chunk_z]
+        yield z0, vol[z0 : z0 + chunk_z]
 
 
 def test_writer_layout_and_pyramid(tmp_path):
@@ -18,8 +18,9 @@ def test_writer_layout_and_pyramid(tmp_path):
     cum = level_factors((1.0, 1.0, 1.0), 2)  # [[1,1,1],[2,2,2]]
 
     h5_path = tmp_path / "out.h5"
-    w = BdvH5Writer(str(h5_path), 1, c, (z, y, x), cum, chunk=4,
-                    downsample="decimate")
+    w = BdvH5Writer(
+        str(h5_path), 1, c, (z, y, x), cum, chunk=4, downsample="decimate"
+    )
     w.write_tile(0, _slabs(vol, 4))
     w.close()
 
@@ -36,10 +37,23 @@ def test_writer_layout_and_pyramid(tmp_path):
             np.testing.assert_array_equal(l0[:], vol[:, j])
 
             l1 = f[f"t00000/s0{j}/1/cells"]
-            expected = downsample(vol[:, j], tuple(step_factors(cum)[1]),
-                                  "decimate")
+            expected = downsample(
+                vol[:, j], tuple(step_factors(cum)[1]), "decimate"
+            )
             assert l1.shape == expected.shape
             np.testing.assert_array_equal(l1[:], expected)
+
+
+def test_writer_level0_chunks_clamped_for_thin_stack(tmp_path):
+    z, c, y, x = 4, 1, 128, 128
+    vol = np.ones((z, c, y, x), dtype=np.uint16)
+    cum = level_factors((1.0, 1.0, 1.0), 2)
+    w = BdvH5Writer(str(tmp_path / "thin.h5"), 1, c, (z, y, x), cum, chunk=64)
+    w.write_tile(0, _slabs(vol, 64))
+    w.close()
+    with h5py.File(str(tmp_path / "thin.h5"), "r") as f:
+        assert f["t00000/s00/0/cells"].chunks == (4, 64, 64)
+        assert f["s00/subdivisions"][:].dtype == np.int32
 
 
 def test_writer_chunks_clamped_to_small_levels(tmp_path):

@@ -20,6 +20,13 @@ Python:
 `.zarr` output raises `NotImplementedError` — ome-zarr is a planned
 extension, only the dispatch seam exists today.
 
+## Memory
+
+Peak RAM ≈ 6 GB (`--downsample decimate`) / 9 GB (`--downsample mean`) for a
+5-channel 2048² stack at `--chunk 64`. The pyramid pass holds a full
+single-channel level-0 volume plus an all-channel slab; lower `--chunk` to
+reduce it.
+
 ## Why plain h5py writes, no compression?
 
 Measured on a 60 GB uncompressed ND2:

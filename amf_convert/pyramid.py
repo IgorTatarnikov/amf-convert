@@ -39,8 +39,6 @@ def downsample(arr, step, method):
         z = arr.shape[0] - arr.shape[0] % sz
         y = arr.shape[1] - arr.shape[1] % sy
         x = arr.shape[2] - arr.shape[2] % sx
-        blocks = arr[:z, :y, :x].reshape(
-            z // sz, sz, y // sy, sy, x // sx, sx
-        )
-        return blocks.mean(axis=(1, 3, 5)).astype(arr.dtype)
+        blocks = arr[:z, :y, :x].reshape(z // sz, sz, y // sy, sy, x // sx, sx)
+        return blocks.mean(axis=(1, 3, 5), dtype=np.float32).astype(arr.dtype)
     raise ValueError(f"unknown downsample method: {method!r}")
